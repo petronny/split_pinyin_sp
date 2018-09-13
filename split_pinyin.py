@@ -1,6 +1,8 @@
 #!/bin/python3
 
 def split_pinyin(pinyin):
+    initial = ''
+
     # retrieve tone
     if pinyin[-1] >= '0' and pinyin[-1] <= '9':
         tone = int(pinyin[-1])
@@ -25,10 +27,8 @@ def split_pinyin(pinyin):
         if pinyin[1] == 'i':
             pinyin = pinyin[1:]
         elif pinyin[1] in 'uv':
-            pinyin = pinyin[1:]
-            pinyin = 'v' + pinyin[1:]
-            final = pinyin
-            initial = ''
+            pinyin = 'v' + pinyin[2:]
+        final = pinyin
     elif pinyin[0] == 'w':
         # wa->ua, wo->uo, wai->uai, wei->uei, wan->uan, wen->uen, wang->uang, weng->ueng
         # wu->u
@@ -36,15 +36,14 @@ def split_pinyin(pinyin):
         pinyin = 'u' + pinyin[1:]
         if pinyin[1] == 'u':
             pinyin = pinyin[1:]
-            final = pinyin
-            initial = ''
+        final = pinyin
     elif pinyin in ['ng', 'm', 'n']:
         # ng->ng, n->n, m->m
         final = pinyin
-        initial = ''
     else:
         # get initial and final
         # initial should be: b p m f d t n l g k h j q x z c s r zh ch sh
+        final = pinyin
         if len(pinyin) > 1 and pinyin[:2] in ['ch', 'sh', 'zh']:
             initial = pinyin[:2]
             final = pinyin[2:]
@@ -71,7 +70,7 @@ def split_pinyin(pinyin):
             final = 'uei'
         elif final == 'iu':
             final = 'iou'
-        elif final == 'iu':
+        elif final == 'un':
             final = 'uen'
 
     return (initial, final, tone, erhua)
